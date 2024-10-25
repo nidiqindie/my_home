@@ -223,18 +223,21 @@
                 <div class="item">
                     <div class="frame">
                         <div class="box front">
-                            <h1>2014</h1>
-                            <span>-In the year 2014 I reached the age of 13-</span>
+                            <h1>太刀</h1>
+                            <span>十分下头，太刀晚期患者常常目光呆滞，并且阴暗潮湿</span>
                         </div>
+                        </a>
+                        
                         <div class="box left"></div>
                         <div class="box right"> </div>
+                       
                     </div>
                 </div>
                 <div class="item">
                     <div class="frame">
                         <div class="box front">
-                            <h1>2015</h1>
-                            <span>-In the year 2015 I reached the age of 14-</span>
+                            <h1>盾斧</h1>
+                            <span>盾斧玩家太有实力了，他们是容光焕发的英雄，并且常常自信从容</span>
                         </div>
                         <div class="box left"></div>
                         <div class="box right"> </div>
@@ -334,7 +337,8 @@
     // 接着，定义了resize函数，该函数用于在窗口大小变化时调整大小。在该函数中，首先计算出新的width和height，然后根据计算结果设置slider的宽度，以及每个item的宽度和高度。
     // 接下来，定义了bindEvents函数，该函数用于绑定事件。在该函数中，首先绑定了窗口大小变化时调用resize函数的事件，然后绑定了点击prev按钮和next按钮时调用prev函数和next函数的事件。
     // 最后，在立即执行函数的末尾，调用了init函数来初始化页面，并定义了move、timer、prev和next函数。其中，move函数用于移动shell到指定的item，timer函数用于启动定时器，prev函数用于切换到上一个item，next函数用于切换到下一个item。
-
+    //在这里更改每个item的链接依次从前到后链接各个item。
+    var linklist = ['c1.html','c2.html','c3.html','c4.html','c5.html'];
     // 获取所有的item元素
     var items = document.getElementsByClassName('item');
     // 循环遍历每个item
@@ -348,7 +352,7 @@
         //定义一个新的链接
         var link = document.createElement('a');
         // 设置<a>元素的href属性
-        link.setAttribute('href', 'c1.html');
+        link.setAttribute('href', './' + linklist[i]);
         // 设置<a>元素的target属性（如果需要在新标签页打开）
         link.setAttribute('target', '_blank');
         frame.appendChild(link);
@@ -356,6 +360,7 @@
         link.appendChild(frontBox);
         // link.appendChild(leftBox);
         // link.appendChild(rightBox);
+        
         // 设置背景图片
         frontBox.style.backgroundImage = 'url(./img/' + (i + 1).toString().padStart(2, '0') + '.jpg)';
         leftBox.style.backgroundImage = 'url(./img/' + (i + 1).toString().padStart(2, '0') + '.jpg)';
