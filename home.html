@@ -16,7 +16,9 @@
             margin: 0;
             font-family: "Source Sans Pro", sans-serif;
         }
-
+        div{
+            caret-color: transparent;
+        }
         /* 设置html和body元素为flex布局，水平和垂直居中对齐，高度为100vh，背景图大小为cover，溢出隐藏，背景图过渡动画时间为0.7秒 */
         html,
         body {
@@ -207,11 +209,53 @@
             font-size: 130px;
             /* 添加过渡效果 */
         }
-    </style>
+        .music_container{
+             position: absolute;
+            width: 150px;
+            height: 150px;
+            /* box-shadow: 0 0 50px #ffffff; */
+            border-radius: 50%;
+            transition: transform  0.5s ease;
+        }
+        .music_jpg {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            /* box-shadow: 0 0 50px #ffffff; */
+            background-size: cover;
+            background-color: transparent;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 50%;
+            animation: rotate 5s linear infinite;
+            animation-play-state: paused;
+            transition: transform  0.5s ease;
+           
+        }
+        .music_container:hover {
+            transform: scale(1.8);
+        }
 
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+
+        }
+    </style>
+    <link rel="icon" href="./img/01.ico" sizes="32x32">
+    <link rel="shortcut icon" href="./img/01.ico" sizes="32x32">
 </head>
 
 <body>
+    <audio id="music" controls>
+        <source src="./music/All My Life - Wild.flac" type="audio/flac">
+        <source src="./music/I Wanna Be In The Cavalry - Seth Staton Watkins.flac" type="audio/flac">
+    </audio>
     <div class="shell">
         <div class="shell_body">
             <div class="button">
@@ -227,10 +271,10 @@
                             <span>十分下头😿😿，太刀晚期患者常常目光呆滞，并且阴暗潮湿🦐🦐🦐</span>
                         </div>
                         </a>
-                        
+
                         <div class="box left"></div>
                         <div class="box right"> </div>
-                       
+
                     </div>
                 </div>
                 <div class="item">
@@ -326,6 +370,9 @@
             </div>
         </div>
     </div>
+    <div class="music_container"><div class="music_jpg"></div>
+    </div>
+  <!-- <button id="qqq">qqqq</button> -->
 </body>
 <script>
     // 这段JavaScript代码的作用是实现一个图片轮播效果。首先，通过document.getElementsByClassName('item')获取到所有具有item类名的元素，并将它们存储在items变量中。
@@ -338,9 +385,20 @@
     // 接下来，定义了bindEvents函数，该函数用于绑定事件。在该函数中，首先绑定了窗口大小变化时调用resize函数的事件，然后绑定了点击prev按钮和next按钮时调用prev函数和next函数的事件。
     // 最后，在立即执行函数的末尾，调用了init函数来初始化页面，并定义了move、timer、prev和next函数。其中，move函数用于移动shell到指定的item，timer函数用于启动定时器，prev函数用于切换到上一个item，next函数用于切换到下一个item。
     //在这里更改每个item的链接依次从前到后链接各个item。
-    var linklist = ['c1.html','c2.html','c3.html','c4.html','c5.html'];
+    var linklist = ['c1.html', 'c2.html', 'c3.html', 'c4.html', 'c5.html'];
     // 获取所有的item元素
     var items = document.getElementsByClassName('item');
+    //获取music
+    var music = document.getElementById('music');
+    //获取music的所有歌
+    var music_list = music.getElementsByTagName('source');
+    console.log(music_list);
+    
+    //获取music按钮的jpg
+    var music_jpg = document.getElementsByClassName('music_jpg')[0];
+    //获取music按钮框架
+    var music_container= document.getElementsByClassName('music_container')[0];
+   
     // 循环遍历每个item
     for (var i = 0; i < items.length; i++) {
         // 获取当前item
@@ -360,12 +418,13 @@
         link.appendChild(frontBox);
         // link.appendChild(leftBox);
         // link.appendChild(rightBox);
-        
+
         // 设置背景图片
         frontBox.style.backgroundImage = 'url(./img/' + (i + 1).toString().padStart(2, '0') + '.jpg)';
         leftBox.style.backgroundImage = 'url(./img/' + (i + 1).toString().padStart(2, '0') + '.jpg)';
         rightBox.style.backgroundImage = 'url(./img/' + (i + 1).toString().padStart(2, '0') + '.jpg)';
     }
+    music_jpg.style.backgroundImage = "url(./img/music.svg)";
     (function () {
         "use strict";
         var shell = document.getElementsByClassName('shell')[0];
@@ -384,6 +443,23 @@
             bindEvents();
             timer();
         }
+
+        // 当前播放的歌曲索引
+        var currentSongIndex = 0;
+        function playNextSong() {
+            // alert('播放下一首歌曲');
+             if (currentSongIndex < music_list.length - 1) {
+                currentSongIndex++;
+            } else {
+                // 如果已经播放到最后一首歌，重新开始
+                currentSongIndex = 0;
+            }
+            console.log(currentSongIndex);
+            // 播放下一首歌
+            music.src= music_list[currentSongIndex].src;
+            music.load();
+            music.play();
+        }
         function resize() {
             // 窗口大小变化时调整大小
             width = Math.max(window.innerWidth * .20, 275);
@@ -397,15 +473,37 @@
                 item.style.width = (width - (margin * 2)) + "px";
                 item.style.height = height + "px";
             }
+            music_container.style.left = window.innerWidth * 0.05 + 'px';
+            music_container.style.bottom = window.innerHeight * 0.05 + 'px';
         }
         function bindEvents() {
+            //自动切歌
+            music.onended = playNextSong;
+            // document.getElementById('qqq').onclick = playNextSong;
             // 窗口大小变化时调整大小
             window.onresize = resize;
+            //首页播放音乐的按钮
+             music_container.addEventListener('click', () => { play_music(); })
             // 点击prev按钮切换item
             prevBtn.addEventListener('click', () => { prev(); });
             nextBtn.addEventListener('click', () => { next(); });
         }
         init();
+        let count_time = 0;
+        function play_music() {
+            if (count_time==0) {
+                 music.play();
+                count_time = 1;
+                 music_jpg.style.animationPlayState = "running";
+            }
+            else
+            {
+                music.pause();
+                count_time = 0;
+                  music_jpg.style.animationPlayState = "paused";
+            }
+            
+        }
         function move(index) {
             // 移动shell到指定的item
             if (index < 1) index = items.length;
@@ -448,6 +546,7 @@
             timer();
         }
     })();
+
 </script>
 
 </html>
